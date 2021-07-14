@@ -1,0 +1,97 @@
+VERSION 1.0 CLASS
+BEGIN
+  MultiUse = -1  'True
+END
+Attribute VB_Name = "Path"
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = False
+Attribute VB_PredeclaredId = True
+Attribute VB_Exposed = False
+Option Explicit
+
+' @private variables
+Private mFileSystem As Object
+
+
+' @Combines two strings into a path.
+Public Function Combine(ByVal Path1 As String, ByVal Path2 As String) As String
+    Combine = IIf(Not Right$(Path1, 1) = Application.PathSeparator, Path1 & Application.PathSeparator & Path2, Path1 & Path2)
+End Function
+
+' @returns the extension of the specified path string.
+Public Function GetExtension(ByVal Path As String) As String
+    GetExtension = mFileSystem.GetExtensionName(Path)
+End Function
+
+' @returns the file name without extension of a file path
+Public Function GetFileNameWithoutExtension(ByVal Path As String) As String
+    GetFileNameWithoutExtension = mFileSystem.GetBaseName(Path)
+End Function
+
+' @returns the file name and extension of a file path
+Public Function GetFileNameWithExtension(ByVal Path As String) As String
+    GetFileNameWithExtension = mFileSystem.GetFile(Path).Name
+End Function
+
+' @returns true if file exists
+Public Function FileExists(ByVal Path As String) As Boolean
+    FileExists = mFileSystem.FileExists(Path)
+End Function
+
+' @returns the parent folder name of the specified path string.
+Public Function GetParentFolderName(ByVal Path As String) As String
+    GetParentFolderName = mFileSystem.GetFile(Path).ParentFolder.Path
+End Function
+
+' @returns true if the specified path string exists.
+Public Function FolderExists(ByVal Path As String) As Boolean
+    FolderExists = mFileSystem.FolderExists(Path)
+End Function
+
+' @returns an object containing the folder object
+'   --DateCreated       'Date when folder was created
+'   --Drive             'Result: "C:" - the drive of the folder path
+'   --Name              'Result: "Src" - name of the folder
+'   --ParentFolder      'Result: "C:\" - name of the  parent folder
+'   --Path              'Result: "C:\Src" - path to the folder
+'   --ShortPath         'Returns short path to file with 8.3 naming convention
+'   --Size              'Size of folder in bytes
+'   --Type              'Result: "SystemFolder" - type which is folder by default
+'   ---Some basic operations
+'   --Copy "C:\NewFolder\"                                      'Copy folder
+'   --Move "C:\NewFolder\"                                      'Move the file to new destination
+'   --Delete                                                    'Delete the folder
+'   --AddFolder "NewSubFolder"                                  'Add a subfolder by name to the Folder
+'   --Folders                                                   'List all folders in Folder
+'   --Files                                                     'List all files in Folder
+Public Function GetFolder(ByVal Path As String) As Object
+    Set GetFolder = mFileSystem.GetFolder(Path)
+End Function
+
+' @returns an object containing the file object
+'   --DateCreated       'Date when file was created
+'   --Drive             'Result: "C:" - the drive of the file path
+'   --Name              'Result: "Hello.txt" - name of the file
+'   --ParentFolder      'Result: "Hello.txt" - name of the file
+'   --Path              'Result: "Hello.txt" - name of the file
+'   --ShortName         'Returns short name of file with 8.3 naming convention
+'   --ShortPath         'Returns short path to file with 8.3 naming convention
+'   --Size              'Size of file in bytes
+'   --Type              'Result: "Text Document" - type of the file
+'   ---Some basic operations
+'   --Copy "C:\NewFolder\NewName.txt"                               'Copy file
+'   --Move "C:\NewFolder\"                                          'Move the file to new destination
+'   --Set ts = f.OpenAsTextStream(ForReading, TristateUseDefault)   'Open file as text stream for read write or append
+'   --Delete                                                        'Delete the file
+Public Function GetFile(ByVal Path As String) As Object
+    Set GetFile = mFileSystem.GetFile(Path)
+End Function
+
+' @constructors
+Private Sub Class_Initialize()
+    Set mFileSystem = CreateObject("Scripting.FileSystemObject")
+End Sub
+
+Private Sub Class_Terminate()
+    Set mFileSystem = Nothing
+End Sub
