@@ -1,6 +1,6 @@
 # VBA-Logger
 
-A logger for VBA, based on desired level log data into the inmediate window, a txt file or in a form of a messagebox.
+A logger for VBA, based on the desired level, logs data into the immediate window, a txt file, or in a form of a messagebox. 
 This project uses Chain of Responsibility design pattern.
 
 ```VBA
